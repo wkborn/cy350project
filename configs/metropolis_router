@@ -1,0 +1,37 @@
+#METROPOLIS ROUTER CONFIG
+
+enable
+conf t
+
+int fa0/1
+ip addr 10.64.0.62 255.255.255.0
+no shut
+exit
+
+int fa0/0.100
+ip addr 10.64.62.10 255.255.255.0
+no shut
+exit
+
+int fa0/0.200
+ip addr 10.64.62.20 255.255.255.0
+no shut
+exit
+
+int fa0/0.300
+ip addr 10.64.62.30 255.255.255.0
+no shut
+exit
+
+int fa0/0.500
+ip addr 10.64.62.50 255.255.255.0
+no shut
+exit
+
+ip route 0.0.0.0 0.0.0.0 10.64.0.64
+
+router ospf 1
+network 10.64.62.0 0.0.0.255 area 0
+exit
+
+
