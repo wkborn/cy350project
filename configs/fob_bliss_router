@@ -1,0 +1,118 @@
+#METROPOLIS ROUTER CONFIG
+
+enable
+conf t
+
+int fa0/0
+ip addr 10.64.62.194 255.255.255.248
+
+no shut
+exit
+
+int fa0/1
+ip addr 10.64.62.206 255.255.255.248
+no shut
+exit
+
+int fa1/1
+ip addr 192.168.64.89 255.255.255.252
+no shut
+exit
+
+int fa1/0
+no shut
+exit
+
+
+
+int fa1/0.100
+encapsulation dot1q 100
+ip addr 192.168.64.1 255.255.255.192
+no shut
+exit
+
+int fa1/0.200
+encapsulation dot1q 200
+ip addr 192.168.64.65 255.255.255.240
+no shut
+exit
+
+int fa1/0.500
+encapsulation dot1q 500
+ip addr 192.168.64.81 255.255.255.248
+no shut
+exit
+
+
+int loop0
+ip addr 192.168.64.92 255.255.255.255
+no shut
+exit
+
+ip route 0.0.0.0 0.0.0.0 10.64.62.193
+
+router ospf 1
+network 10.64.0.0 0.0.0.255 area 0
+network 10.64.62.128 0.0.0.127 area 0
+network 10.64.62.0 0.0.0.63 area 0
+network 10.64.62.192 0.0.0.7 area 0
+network 10.64.62.200 0.0.0.7 area 0
+network 10.64.62.208 0.0.0.0 area 0
+network 192.168.64.0 0.0.0.63 area 0
+network 192.168.64.64 0.0.0.15 area 0
+network 192.168.64.80 0.0.0.7 area 0
+network 192.168.64.88 0.0.0.3 area 0
+network 192.168.64.92 0.0.0.0 area 0
+exit
+
+access-list 10 permit 192.168.64.0 0.0.0.63
+access-list 20 permit 192.168.64.64 0.0.0.15
+access-list 30 permit 192.168.64.80 0.0.0.7
+
+ip nat pool NETWORK 10.64.62.194 10.64.62.194 netmask 255.255.255.248
+ip nat pool CARSON 192.198.64.89 192.198.64.89 netmask 255.255.255.252
+
+ip nat inside source list 10 pool NETWORK overload
+ip nat inside source list 20 pool NETWORK overload
+ip nat inside source list 30 pool NETWORK overload
+
+ip nat inside source list 10 pool CARSON overload
+ip nat inside source list 20 pool CARSON overload
+ip nat inside source list 30 pool CARSON overload
+
+int fa0/0
+ip nat outside
+exit
+
+int fa0/1
+ip nat outside
+exit
+
+int fa1/1
+ip nat outside
+exit
+
+int fa1/0
+ip nat inside
+exit
+
+enable secret cisco
+
+hostname FOBBLISSROUTER
+ip domain-name bornstallings
+
+crypto key generate rsa
+1024
+
+line vty 0 4
+transport input ssh
+password cisco
+login
+exit
+
+line con 0
+password cisco
+login
+exit
+
+service password-encryption

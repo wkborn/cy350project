@@ -1,36 +1,112 @@
-#FOB HOOD ROUTER CONFIG
+#METROPOLIS ROUTER CONFIG
 
 enable
 conf t
 
-int fa1/0
-ip addr 10.64.62.1 255.255.255.0
+int fa0/0
+ip addr 10.64.62.205 255.255.255.248
 no shut
 exit
+
+int fa0/1
+ip addr 10.64.62.195 255.255.255.248
+no shut
+exit
+
+int fa1/0
+no shut
+exit
+
+
+
+int fa1/0.100
+encapsulation dot1q 100
+ip addr 192.168.64.1 255.255.255.128
+no shut
+exit
+
+int fa1/0.200
+encapsulation dot1q 200
+ip addr 192.168.64.129 255.255.255.192
+no shut
+exit
+int fa1/0.300
+encapsulation dot1q 300
+ip addr 192.168.64.201 255.255.255.248
+no shut
+
+exit
+int fa1/0.500
+encapsulation dot1q 500
+ip addr 192.168.64.193 255.255.255.248
+no shut
+exit
+
+
+int loop0
+ip addr 192.168.64.208 255.255.255.255
+no shut
+exit
+
+ip route 0.0.0.0 0.0.0.0 10.64.62.201
+
+router ospf 1
+network 10.64.0.0 0.0.0.255 area 0
+network 10.64.62.128 0.0.0.127 area 0
+network 10.64.62.0 0.0.0.63 area 0
+network 10.64.62.192 0.0.0.7 area 0
+network 10.64.62.200 0.0.0.7 area 0
+network 10.64.62.208 0.0.0.0 area 0
+network 192.168.64.0 0.0.0.127 area 0
+network 192.168.64.128 0.0.0.63 area 0
+network 192.168.64.192 0.0.0.7 area 0
+network 192.168.64.200 0.0.0.7 area 0
+network 192.168.64.208 0.0.0.0 area 0
+exit
+
+ip nat inside source static 192.168.64.202 10.64.62.202
+ip nat inside source static 192.168.64.203 10.64.62.203
+ip nat inside source static 192.168.64.204 10.64.62.204
+
+access-list 10 permit 192.168.64.0 0.0.0.127
+access-list 20 permit 192.168.64.128 0.0.0.63
+access-list 30 permit 192.168.64.192 0.0.0.7
+
+ip nat pool NETWORK 10.64.62.205 10.64.62.205 netmask 255.255.255.248
+
+ip nat inside source list 10 pool NETWORK overload
+ip nat inside source list 20 pool NETWORK overload
+ip nat inside source list 30 pool NETWORK overload
 
 int fa0/0
-ip addr 10.64.62.7 255.255.255.0
-no shut
+ip nat outside
 exit
 
-int fa0/1.100
-ip addr 192.168.64.251 255.255.255.0
-no shut
+int fa0/1
+ip nat outside
 exit
 
-int fa0/1.500 
-ip addr 192.168.64.252 255.255.255.0
-no shut
+int fa1/0
+ip nat inside
 exit
+
+enable secret cisco
+
+hostname FOBHOODROUTER
+ip domain-name bornstallings
+
+crypto key generate rsa
+1024
 
 line vty 0 4
-secret cisco
+transport input ssh
+password cisco
 login
 exit
 
 line con 0
-secret cisco
+password cisco
 login
 exit
 
-enable password cisco
+service password-encryption

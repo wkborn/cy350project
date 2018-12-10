@@ -1,0 +1,46 @@
+#PATTON CITY SWITCH CONFIG
+
+enable
+conf t
+
+vlan 10
+name NET
+
+int fa0/1
+switchport mode trunk
+switchport trunk encapsulation dot1q
+
+int fa0/2
+switchport mode trunk
+switchport trunk encapsulation dot1q
+
+int fa0/3
+switchport mode trunk
+switchport trunk encapsulation dot1q
+
+int range fa0/4-24
+switchport mode access
+switchport access vlan 10
+
+
+
+enable secret cisco
+
+hostname PATTONCITY
+ip domain-name bornstallings
+
+crypto key generate rsa
+1024
+
+line vty 0 4
+transport input ssh
+password cisco
+login
+exit
+
+line con 0
+password cisco
+login
+exit
+
+service password-encryption

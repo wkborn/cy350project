@@ -1,0 +1,61 @@
+#FOB HOOD SWITCH CONFIG
+
+enable
+conf t
+
+
+vlan 100
+name DATA
+vlan 200
+name VOIP
+vlan 300
+name SERVERS
+vlan 500
+name MANAGEMENT
+
+int fa0/1
+switchport mode trunk
+switchport trunk encapsulation dot1q
+
+int fa0/5
+switchport mode access
+switchport access vlan 500
+
+int fa0/2
+switchport mode access
+switchport access vlan 100
+
+int fa0/3
+switchport mode access
+switchport access vlan 200
+
+
+int range fa0/12-14
+switchport mode access
+switchport access vlan 300
+
+interface vlan 500
+ip address 192.168.64.198 255.255.255.248
+exit
+ip default-gateway 192.168.64.193
+
+enable secret cisco
+
+hostname FOBHOODSWITCH
+ip domain-name bornstallings
+
+crypto key generate rsa
+1024
+
+line vty 0 4
+transport input ssh
+password cisco
+login
+exit
+
+line con 0
+password cisco
+login
+exit
+
+service password-encryption
