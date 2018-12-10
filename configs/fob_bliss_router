@@ -68,6 +68,7 @@ exit
 access-list 10 permit 192.168.64.0 0.0.0.63
 access-list 20 permit 192.168.64.64 0.0.0.15
 access-list 30 permit 192.168.64.80 0.0.0.7
+access-list 40 permit 192.168.64.88 0.0.0.3
 
 ip nat pool NETWORK 10.64.62.194 10.64.62.194 netmask 255.255.255.248
 ip nat pool CARSON 192.198.64.89 192.198.64.89 netmask 255.255.255.252
@@ -75,10 +76,12 @@ ip nat pool CARSON 192.198.64.89 192.198.64.89 netmask 255.255.255.252
 ip nat inside source list 10 pool NETWORK overload
 ip nat inside source list 20 pool NETWORK overload
 ip nat inside source list 30 pool NETWORK overload
+ip nat inside source list 40 pool NETWORK overload
 
 ip nat inside source list 10 pool CARSON overload
 ip nat inside source list 20 pool CARSON overload
 ip nat inside source list 30 pool CARSON overload
+ip nat inside source list 40 pool NETWORK overload
 
 int fa0/0
 ip nat outside
