@@ -17,7 +17,7 @@ int fa0/1
 switchport mode trunk
 switchport trunk encapsulation dot1q
 
-int fa0/15-fa0/20
+int range fa0/15-fa0/20
 switchport mode access
 switchport access vlan 500
 
@@ -25,7 +25,7 @@ int range fa0/2-fa0/11
 switchport mode access
 switchport access vlan 100
 
-int fa0/21-fa0/24
+int range fa0/21-fa0/24
 switchport mode access
 switchport access vlan 200
 
