@@ -81,7 +81,7 @@ ip nat inside source list 40 pool NETWORK overload
 ip nat inside source list 10 pool CARSON overload
 ip nat inside source list 20 pool CARSON overload
 ip nat inside source list 30 pool CARSON overload
-ip nat inside source list 40 pool NETWORK overload
+ip nat inside source list 40 pool CARSON overload
 
 int fa0/0
 ip nat outside
