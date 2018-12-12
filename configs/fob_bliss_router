@@ -17,7 +17,7 @@ exit
 
 int fa1/1
 ip addr 192.168.64.89 255.255.255.252
-ip nat outside
+ip nat inside
 no shut
 exit
 
@@ -83,13 +83,6 @@ ip nat inside source list 10 pool NETWORK overload
 ip nat inside source list 20 pool NETWORK overload
 ip nat inside source list 30 pool NETWORK overload
 ip nat inside source list 40 pool NETWORK overload
-
-
-ip nat pool CARSON 192.198.64.89 192.198.64.89 netmask 255.255.255.252
-
-ip nat inside source list 10 pool CARSON overload
-ip nat inside source list 20 pool CARSON overload
-ip nat inside source list 30 pool CARSON overload
 
 enable secret cisco
 
