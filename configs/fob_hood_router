@@ -5,15 +5,18 @@ conf t
 
 int fa0/0
 ip addr 10.64.62.205 255.255.255.248
+ip nat outside
 no shut
 exit
 
 int fa0/1
 ip addr 10.64.62.195 255.255.255.248
+ip nat outside
 no shut
 exit
 
 int fa1/0
+ip nat inside
 no shut
 exit
 
@@ -22,23 +25,28 @@ exit
 int fa1/0.100
 encapsulation dot1q 100
 ip addr 192.168.64.1 255.255.255.128
+ip nat inside
 no shut
 exit
 
 int fa1/0.200
 encapsulation dot1q 200
 ip addr 192.168.64.129 255.255.255.192
+ip nat inside
 no shut
 exit
+
 int fa1/0.300
 encapsulation dot1q 300
 ip addr 192.168.64.201 255.255.255.248
 no shut
-
+ip nat inside
 exit
+
 int fa1/0.500
 encapsulation dot1q 500
 ip addr 192.168.64.193 255.255.255.248
+ip nat inside
 no shut
 exit
 
@@ -77,18 +85,6 @@ ip nat pool NETWORK 10.64.62.205 10.64.62.205 netmask 255.255.255.248
 ip nat inside source list 10 pool NETWORK overload
 ip nat inside source list 20 pool NETWORK overload
 ip nat inside source list 30 pool NETWORK overload
-
-int fa0/0
-ip nat outside
-exit
-
-int fa0/1
-ip nat outside
-exit
-
-int fa1/0
-ip nat inside
-exit
 
 enable secret cisco
 
