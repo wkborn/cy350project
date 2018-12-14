@@ -3,9 +3,6 @@
 enable
 conf t
 
-enable
-conf t
-
 vlan 10
 name NET
 
@@ -21,14 +18,10 @@ int fa0/3
 switchport mode trunk
 switchport trunk encapsulation dot1q
 
-int range fa0/4-24
-switchport mode access
-switchport access vlan 10
-
 interface vlan 10
-ip address 10.64.62.132 255.255.255.128
+ip address 10.64.62.138 255.255.255.252
 exit
-ip default-gateway 10.64.62.129
+ip default-gateway 10.64.62.137
 
 enable secret cisco
 
@@ -38,7 +31,11 @@ ip domain-name bornstallings
 crypto key generate rsa
 1024
 
+access-list 20 permit 10.64.62.80 0.0.0.7
+access-list 20 permit 10.64.62.88 0.0.0.7
+
 line vty 0 4
+access-class 20 in
 transport input ssh
 password cisco
 login

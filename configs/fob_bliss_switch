@@ -1,4 +1,4 @@
-#FOB HOOD SWITCH CONFIG
+#FOB BLISS SWITCH CONFIG
 
 enable
 conf t
@@ -31,9 +31,9 @@ switchport access vlan 200
 
 
 interface vlan 500
-ip address 192.168.64.86 255.255.255.248
+ip address 10.64.62.90 255.255.255.248
 exit
-ip default-gateway 192.168.64.81
+ip default-gateway 10.64.62.89
 
 enable secret cisco
 
@@ -43,7 +43,11 @@ ip domain-name bornstallings
 crypto key generate rsa
 1024
 
+access-list 20 permit 10.64.62.80 0.0.0.7
+access-list 20 permit 10.64.62.88 0.0.0.7
+
 line vty 0 4
+access-class 20 in
 transport input ssh
 password cisco
 login

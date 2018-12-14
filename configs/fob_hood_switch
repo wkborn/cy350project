@@ -35,9 +35,9 @@ switchport mode access
 switchport access vlan 300
 
 interface vlan 500
-ip address 192.168.64.198 255.255.255.248
+ip address 10.64.62.82 255.255.255.248
 exit
-ip default-gateway 192.168.64.193
+ip default-gateway 10.64.62.81
 
 enable secret cisco
 
@@ -47,7 +47,11 @@ ip domain-name bornstallings
 crypto key generate rsa
 1024
 
+access-list 20 permit 10.64.62.80 0.0.0.7
+access-list 20 permit 10.64.62.88 0.0.0.7
+
 line vty 0 4
+access-class 20 in
 transport input ssh
 password cisco
 login

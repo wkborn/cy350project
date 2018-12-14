@@ -1,16 +1,16 @@
-#METROPOLIS ROUTER CONFIG
+#FORT HOOD  ROUTER CONFIG
 
 enable
 conf t
 
 int fa0/0
-ip addr 10.64.62.205 255.255.255.248
+ip addr 10.64.62.114 255.255.255.248
 ip nat outside
 no shut
 exit
 
 int fa0/1
-ip addr 10.64.62.195 255.255.255.248
+ip addr 10.64.62.107 255.255.255.248
 ip nat outside
 no shut
 exit
@@ -20,71 +20,79 @@ ip nat inside
 no shut
 exit
 
-
-
 int fa1/0.100
 encapsulation dot1q 100
-ip addr 192.168.64.1 255.255.255.128
+ip addr 192.168.64.1 255.255.255.0
 ip nat inside
 no shut
 exit
 
 int fa1/0.200
 encapsulation dot1q 200
-ip addr 192.168.64.129 255.255.255.192
+ip addr 10.64.62.1 255.255.255.192
 ip nat inside
 no shut
 exit
 
 int fa1/0.300
 encapsulation dot1q 300
-ip addr 192.168.64.201 255.255.255.248
-no shut
+ip addr 10.64.62.97 255.255.255.248
 ip nat inside
+no shut
 exit
 
 int fa1/0.500
 encapsulation dot1q 500
-ip addr 192.168.64.193 255.255.255.248
+ip addr 10.64.62.81 255.255.255.248
 ip nat inside
 no shut
 exit
 
 
 int loop0
-ip addr 192.168.64.208 255.255.255.255
+ip addr 10.64.62.142 255.255.255.255
 no shut
 exit
 
-ip route 0.0.0.0 0.0.0.0 10.64.62.201
+ip route 0.0.0.0 0.0.0.0 10.64.62.105
+ip route 0.0.0.0 0.0.0.0 10.64.62.113
 
 router ospf 1
 network 10.64.0.0 0.0.0.255 area 0
-network 10.64.62.128 0.0.0.127 area 0
 network 10.64.62.0 0.0.0.63 area 0
-network 10.64.62.192 0.0.0.7 area 0
-network 10.64.62.200 0.0.0.7 area 0
-network 10.64.62.208 0.0.0.0 area 0
-network 192.168.64.0 0.0.0.127 area 0
-network 192.168.64.128 0.0.0.63 area 0
-network 192.168.64.192 0.0.0.7 area 0
-network 192.168.64.200 0.0.0.7 area 0
-network 192.168.64.208 0.0.0.0 area 0
+network 10.64.62.64 0.0.0.15 area 0
+network 10.64.62.80 0.0.0.7 area 0
+network 10.64.62.88 0.0.0.7 area 0
+network 10.64.62.96 0.0.0.7 area 0
+network 10.64.62.104 0.0.0.7 area 0
+network 10.64.62.112 0.0.0.7 area 0
+network 10.64.62.120 0.0.0.3 area 0
+network 10.64.62.124 0.0.0.3 area 0
+network 10.64.62.128 0.0.0.3 area 0
+network 10.64.62.132 0.0.0.3 area 0
+network 10.64.62.136 0.0.0.3 area 0
+network 10.64.62.140 0.0.0.0 area 0
+network 10.64.62.141 0.0.0.0 area 0
+network 10.64.62.142 0.0.0.0 area 0
+network 10.64.62.143 0.0.0.0 area 0
+network 192.168.64.0 0.0.0.255 area 0
 exit
 
-ip nat inside source static 192.168.64.202 10.64.62.202
-ip nat inside source static 192.168.64.203 10.64.62.203
-ip nat inside source static 192.168.64.204 10.64.62.204
 
-access-list 10 permit 192.168.64.0 0.0.0.127
-access-list 20 permit 192.168.64.128 0.0.0.63
-access-list 30 permit 192.168.64.192 0.0.0.7
+access-list 10 permit 192.168.64.0 0.0.0.255
 
-ip nat pool NETWORK 10.64.62.205 10.64.62.205 netmask 255.255.255.248
+ip nat pool NETWORK 10.64.62.142 10.64.62.142 netmask 255.255.255.255
 
 ip nat inside source list 10 pool NETWORK overload
-ip nat inside source list 20 pool NETWORK overload
-ip nat inside source list 30 pool NETWORK overload
+
+access-list 101 permit icmp 10.64.62.88 0.0.0.7 10.64.62.80 0.0.0.7 echo-reply
+access-list 101 permit icmp 10.64.62.80 0.0.0.7 10.64.62.88 0.0.0.7 echo-reply
+access-list 101 deny icmp any any echo-reply
+access-list 101 permit ip any any
+
+int fa1/0.500
+ip access-group 101 in
+exit
 
 enable secret cisco
 
@@ -94,7 +102,11 @@ ip domain-name bornstallings
 crypto key generate rsa
 1024
 
+access-list 20 permit 10.64.62.80 0.0.0.7
+access-list 20 permit 10.64.62.88 0.0.0.7
+
 line vty 0 4
+access-class 20 in
 transport input ssh
 password cisco
 login

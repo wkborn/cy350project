@@ -4,52 +4,77 @@ enable
 conf t
 
 int fa0/0
-ip addr 10.64.0.62 255.255.255.128
+ip addr 10.64.0.62 255.255.255.0
 no shut
 exit
 
 int fa0/1
-ip addr 10.64.62.193 255.255.255.248
+ip addr 10.64.62.105 255.255.255.248
+no shut
+exit
+
+int fa0/1.10
+encapsulation dot1q 10
+ip addr 10.64.62.133 255.255.255.252
 no shut
 exit
 
 int fa1/0
-ip addr 10.64.62.201 255.255.255.248
-no shut
-exit
-
-
-int fa0/1.10
-encapsulation dot1q 10
-ip addr 10.64.62.1 255.255.255.128
+ip addr 10.64.62.113 255.255.255.248
 no shut
 exit
 
 int fa1/0.10
 encapsulation dot1q 10
-ip addr 10.64.62.129 255.255.255.192
+ip addr 10.64.62.137 255.255.255.252
 no shut
 exit
+
 
 int loop0
-ip addr 10.64.62.208 255.255.255.255
+ip addr 10.64.62.140 255.255.255.255
 no shut
 exit
 
-ip route 0.0.0.0 0.0.0.0 10.64.0.64
+ip route 0.0.0.0 0.0.0.0 10.64.0.254
 
 router ospf 1
 network 10.64.0.0 0.0.0.255 area 0
-network 10.64.62.128 0.0.0.127 area 0
 network 10.64.62.0 0.0.0.63 area 0
-network 10.64.62.192 0.0.0.7 area 0
-network 10.64.62.200 0.0.0.7 area 0
-network 10.64.62.208 0.0.0.0 area 0
+network 10.64.62.64 0.0.0.15 area 0
+network 10.64.62.80 0.0.0.7 area 0
+network 10.64.62.88 0.0.0.7 area 0
+network 10.64.62.96 0.0.0.7 area 0
+network 10.64.62.104 0.0.0.7 area 0
+network 10.64.62.112 0.0.0.7 area 0
+network 10.64.62.120 0.0.0.3 area 0
+network 10.64.62.124 0.0.0.3 area 0
+network 10.64.62.128 0.0.0.3 area 0
+network 10.64.62.132 0.0.0.3 area 0
+network 10.64.62.136 0.0.0.3 area 0
+network 10.64.62.140 0.0.0.0 area 0
+network 10.64.62.141 0.0.0.0 area 0
+network 10.64.62.142 0.0.0.0 area 0
+network 10.64.62.143 0.0.0.0 area 0
 exit
 
-
-
 enable secret cisco
+
+access-list 10 permit 10.64.0.0 255.255.255.0
+access-list 10 permit 10.64.62.0 255.255.255.0
+access-list 10 deny 10.64.0.0 255.255.0.0
+access-list 10 permit any
+
+access-list 101 permit icmp 10.64.0.0 0.0.0.255 any echo-reply
+access-list 101 permit icmp 10.19.89.0 0.0.0.255 any echo-reply
+access-list 101 deny icmp any any echo-reply
+access-list 101 permit ip any any
+
+int fa0/0
+ip access-group 101 in
+ip access-group 10 in
+ip access-group 10 out
+exit
 
 hostname METROPOLIS
 ip domain-name bornstallings
@@ -57,7 +82,13 @@ ip domain-name bornstallings
 crypto key generate rsa
 1024
 
+
+access-list 20 permit 10.64.62.80 0.0.0.7
+access-list 20 permit 10.64.62.88 0.0.0.7
+
+
 line vty 0 4
+access-class 20 in
 transport input ssh
 password cisco
 login
